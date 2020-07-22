@@ -4,30 +4,50 @@ import React, { Component } from 'react';
 
 export default class IncompleteContainer extends Component {
 
-    // When implementing the search bar, consider implementing state here to make it dynamic. 
-    // i.e everytime you type in the input field, the ToDos are immediately filtered
-    
-    // state = {
-    //     searchTerm: ""
-    // }
+  state = {
+    searchTerm: ""
+  }
 
-    // When implementing the search bar, consider implementing a function that handles setState and pass this function down to 
-    // SearchBarComponent
-  
-    // handleOnChange = () => {
-        
-    // }
+  // has 2 parameters for the input name and the event listener
+  handleOnChange = (name, event) => {
+    this.setState({
+      [name]: event.target.value
+    })
+  }
 
-    // When implementing the search term, consider implementing a function that FILTERs the todos.
-    // To determine which to filter, find out which ToDo title INCLUDES the search term typed.
+  // passing the object that composes the searchTerm new state
+  // handleOnChange = newStateValue => {
+  //   this.setState(newStateValue)
+  // }
+
+  // passing the event.target.value to set searchTerm state
+  // handleOnChange = value => {
+  //   this.setState({
+  //     searchTerm: value
+  //   })
+  // }
+
+  renderTodos = () => {
+    const filteredTodos = this.props.todos.filter(todo => todo.title.toLowerCase().includes(this.state.searchTerm.toLowerCase()))
+
+    return filteredTodos.map(todo => 
+      <ToDoCard 
+        key={todo.id} 
+        id={todo.id} 
+        title={todo.title} 
+        completed={todo.completed} 
+        updateTodo={this.props.updateTodo}
+        removeTodo={this.props.removeTodo}
+      />
+      )
+  }
 
   render() {
     return (
         <div>
             <h1>Incomplete Todos</h1>
-            {/* <SearchBarComponent handleOnChange={this.handleOnChange}/> */}
-            {/* Render ToDo Card for each ToDo */} 
-            {/* Which Array method can you use? */}
+            <SearchBarComponent searchTerm={this.state.searchTerm} handleUpdateState={this.handleOnChange}/>
+            {this.renderTodos()}
         </div>
     )
   }
